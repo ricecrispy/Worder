@@ -1,4 +1,10 @@
 import React from "react";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import "bootstrap/dist/css/bootstrap.css";
 
 class CanvasBoard extends React.Component {
   constructor(props) {
@@ -15,7 +21,8 @@ class CanvasBoard extends React.Component {
       this.state.textLengthLimit - this.state.value.length <= 0;
     if (
       !hasReachedTextLengthLimit ||
-      (hasReachedTextLengthLimit && event.target.value.length < this.state.value.length)
+      (hasReachedTextLengthLimit &&
+        event.target.value.length < this.state.value.length)
     ) {
       this.setState({ value: event.target.value });
     }
@@ -42,7 +49,7 @@ class CanvasBoard extends React.Component {
       ctx,
       inputText,
       canvas.width / 2,
-      canvas.height / 2,
+      canvas.height / 2 - inputText.length,
       400,
       lineHeight
     );
@@ -83,26 +90,34 @@ class CanvasBoard extends React.Component {
 
   render() {
     return (
-      <div id="canvasBoard" ref="canvasBoard">
-        <canvas id="canvasBody" ref="canvasBody" width={500} height={500} />
-        <br />
-        <br />
-        <form onSubmit={this.handleSubmit}>
-          <label>
-            Name:
-            <input
-              type="text"
-              value={this.state.value}
-              onChange={this.handleChange}
-            />
-          </label>
-          <input type="submit" value="Create" />
-        </form>
-        <p id="wordCount" ref="wordCount">
-          characters left:
-          {this.state.textLengthLimit - this.state.value.length}
-        </p>
-      </div>
+      <Container>
+        <Row>
+          <Col sm={{ span: 6, offset: 3 }} align="center">
+            <canvas id="canvasBody" ref="canvasBody" width={500} height={500} />
+          </Col>
+        </Row>
+        <Row>
+          <Col sm={{ span: 6, offset: 3 }}>
+            <Form onSubmit={this.handleSubmit}>
+              <Form.Group controlId="formTextInput">
+                <Form.Control
+                  size="lg"
+                  placeholder="What is on your mind?"
+                  value={this.state.value}
+                  onChange={this.handleChange}
+                />
+                <Form.Text className="text-muted">
+                  characters left:{" "}
+                  {this.state.textLengthLimit - this.state.value.length}
+                </Form.Text>
+              </Form.Group>
+              <Button variant="primary" size="lg" type="submit">
+                Create
+              </Button>
+            </Form>
+          </Col>
+        </Row>
+      </Container>
     );
   }
 }
