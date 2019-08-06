@@ -1,7 +1,5 @@
 import React from "react";
-import Route from "react-router-dom/Route";
-import Switch from "react-router-dom/Switch";
-import Home from "./Home";
+import { Switch, Route } from "react-router-dom";
 import CanvasBoard from "./CanvasBoard";
 import "./App.css";
 

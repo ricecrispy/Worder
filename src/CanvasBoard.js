@@ -93,7 +93,7 @@ class CanvasBoard extends React.Component {
       <Container>
         <Row>
           <Col sm={{ span: 6, offset: 3 }} align="center">
-            <canvas id="canvasBody" ref="canvasBody" width={500} height={500} />
+            <canvas id="canvasBody" ref="canvasBody" width={450} height={450} />
           </Col>
         </Row>
         <Row>
