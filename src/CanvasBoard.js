@@ -3,16 +3,23 @@ import React from "react";
 class CanvasBoard extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { value: "" };
+    this.state = { value: "", textLengthLimit: 50 };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-    //handle the typing-in-text-field event
-    handleChange(event) {
+  //handle the typing-in-text-field event
+  handleChange(event) {
+    let hasReachedTextLengthLimit =
+      this.state.textLengthLimit - this.state.value.length <= 0;
+    if (
+      !hasReachedTextLengthLimit ||
+      (hasReachedTextLengthLimit && event.target.value.length < this.state.value.length)
+    ) {
       this.setState({ value: event.target.value });
     }
+  }
 
   //handle the button onclick event
   handleSubmit(event) {
@@ -22,6 +29,23 @@ class CanvasBoard extends React.Component {
     let inputText = this.state.value;
     this.addTextToCanvas(ctx, canvas, inputText);
     event.preventDefault();
+  }
+
+  //add text to the canvas element
+  addTextToCanvas(ctx, canvas, inputText) {
+    ctx.fillStyle = "black";
+    ctx.font = "40px Courier";
+    ctx.textAlign = "center";
+
+    let lineHeight = 36;
+    this.wrapText(
+      ctx,
+      inputText,
+      canvas.width / 2,
+      canvas.height / 2,
+      400,
+      lineHeight
+    );
   }
 
   //Source: https://codepen.io/bramus/pen/eZYqoO
@@ -44,21 +68,10 @@ class CanvasBoard extends React.Component {
     context.fillText(line, x, y);
   }
 
-  //add text to the canvas element
-  addTextToCanvas(ctx, canvas, inputText) {
-    ctx.fillStyle = "black";
-    ctx.font = "40px Courier";
-    ctx.textAlign = "center";
-
-    let lineHeight = 36;
-    this.wrapText(
-      ctx,
-      inputText,
-      canvas.width / 2,
-      canvas.height / 2,
-      400,
-      lineHeight
-    );
+  //Fill the canvas element with the chosen background color
+  fillCanvasBackgroundColor(ctx, canvas) {
+    ctx.fillStyle = "#FEF5E7";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
 
   //Initialize the canvas element
@@ -66,12 +79,6 @@ class CanvasBoard extends React.Component {
     let canvas = this.refs.canvasBody;
     let ctx = canvas.getContext("2d");
     this.fillCanvasBackgroundColor(ctx, canvas);
-  }
-
-  //Fill the canvas element with the chosen background color
-  fillCanvasBackgroundColor(ctx, canvas) {
-    ctx.fillStyle = "#FEF5E7";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
 
   render() {
@@ -91,6 +98,10 @@ class CanvasBoard extends React.Component {
           </label>
           <input type="submit" value="Create" />
         </form>
+        <p id="wordCount" ref="wordCount">
+          characters left:
+          {this.state.textLengthLimit - this.state.value.length}
+        </p>
       </div>
     );
   }
